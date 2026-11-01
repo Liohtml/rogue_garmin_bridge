@@ -1,0 +1,32 @@
+<strings>
+    <string id="AppName">Echo Bike</string>
+    <string id="Searching">Searching Echo Bike...</string>
+    <string id="Connecting">Connecting...</string>
+    <string id="Subscribing">Starting data...</string>
+    <string id="Connected">Echo Bike connected</string>
+    <string id="Reconnecting">Connection lost...</string>
+    <string id="NoFtms">No FTMS data - rescanning</string>
+    <string id="BleError">Bluetooth error</string>
+    <string id="PressStart">Press START</string>
+    <string id="Recording">REC</string>
+    <string id="Paused">PAUSED</string>
+    <string id="Resume">Resume</string>
+    <string id="Save">Save</string>
+    <string id="Discard">Discard</string>
+    <string id="DiscardConfirm">Discard activity?</string>
+    <string id="Saved">Activity saved</string>
+    <string id="Discarded">Activity discarded</string>
+    <string id="Lap">Lap</string>
+    <string id="Power">POWER</string>
+    <string id="Cadence">RPM</string>
+    <string id="Speed">SPEED</string>
+    <string id="Distance">DISTANCE</string>
+    <string id="HeartRate">HR</string>
+    <string id="Calories">KCAL</string>
+    <string id="AvgPower">AVG W</string>
+    <string id="MaxPower">MAX W</string>
+    <string id="AvgCadence">AVG RPM</string>
+    <string id="NormPower">NP</string>
+    <string id="KcalPerHour">KCAL/H</string>
+    <string id="LapPower">LAP W</string>
+</strings>

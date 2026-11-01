@@ -1,0 +1,32 @@
+<strings>
+    <string id="AppName">Echo Bike</string>
+    <string id="Searching">Suche Echo Bike...</string>
+    <string id="Connecting">Verbinde...</string>
+    <string id="Subscribing">Starte Daten...</string>
+    <string id="Connected">Echo Bike verbunden</string>
+    <string id="Reconnecting">Verbindung verloren...</string>
+    <string id="NoFtms">Keine FTMS-Daten - suche neu</string>
+    <string id="BleError">Bluetooth-Fehler</string>
+    <string id="PressStart">START drücken</string>
+    <string id="Recording">REC</string>
+    <string id="Paused">PAUSE</string>
+    <string id="Resume">Fortsetzen</string>
+    <string id="Save">Speichern</string>
+    <string id="Discard">Verwerfen</string>
+    <string id="DiscardConfirm">Aktivität verwerfen?</string>
+    <string id="Saved">Aktivität gespeichert</string>
+    <string id="Discarded">Aktivität verworfen</string>
+    <string id="Lap">Runde</string>
+    <string id="Power">LEISTUNG</string>
+    <string id="Cadence">U/MIN</string>
+    <string id="Speed">TEMPO</string>
+    <string id="Distance">DISTANZ</string>
+    <string id="HeartRate">PULS</string>
+    <string id="Calories">KCAL</string>
+    <string id="AvgPower">Ø W</string>
+    <string id="MaxPower">MAX W</string>
+    <string id="AvgCadence">Ø U/MIN</string>
+    <string id="NormPower">NP</string>
+    <string id="KcalPerHour">KCAL/H</string>
+    <string id="LapPower">RUNDE W</string>
+</strings>
