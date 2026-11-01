@@ -1,0 +1,5 @@
+# Paths are explicit so tooling folders (.ciq/, bin/, dist/) are never compiled.
+project.manifest = manifest.xml
+base.sourcePath = source
+base.resourcePath = resources
+base.lang.deu = resources-deu

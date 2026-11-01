@@ -1,0 +1,66 @@
+name: Release
+
+# Push a tag like v1.0.0 to build every device and publish a GitHub release.
+# Optional secret CIQ_DEVELOPER_KEY_B64: base64 of your developer_key.der, so the
+# store package (.iq) is signed with the key registered in the Connect IQ store.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  CIQ_SDK_VERSION: "9.3.0"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Check manifest version matches tag
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          manifest=$(grep -o 'version="[0-9.]*"' manifest.xml | tail -1 | cut -d'"' -f2)
+          echo "tag=$tag manifest=$manifest"
+          [ "$tag" = "$manifest" ] || { echo "::error::manifest.xml version ($manifest) != tag ($tag)"; exit 1; }
+
+      - name: Cache Connect IQ SDK
+        uses: actions/cache@v4
+        with:
+          path: .ciq/connectiq-sdk-*
+          key: ciq-sdk-${{ env.CIQ_SDK_VERSION }}
+
+      - name: Install SDK and device definitions
+        run: scripts/setup-sdk.sh
+
+      - name: Signing key
+        env:
+          KEY_B64: ${{ secrets.CIQ_DEVELOPER_KEY_B64 }}
+        run: |
+          if [ -n "$KEY_B64" ]; then
+            echo "$KEY_B64" | base64 -d > developer_key.der
+          else
+            echo "::warning::CIQ_DEVELOPER_KEY_B64 not set - signing with a throw-away key (fine for sideloading, not for store updates)"
+          fi
+
+      - name: Build
+        run: |
+          scripts/build.sh
+          cd dist && zip -q EchoBike-all-devices.zip EchoBike-*.prg
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+          body: |
+            **Install:** download the `.prg` for your watch, connect the watch via USB and copy it to `GARMIN/APPS/`.
+            Which file fits which model: see the table in the [README](https://github.com/${{ github.repository }}#supported-watches).
+            `EchoBike.iq` is the Connect IQ store package.

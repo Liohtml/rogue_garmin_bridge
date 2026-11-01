@@ -1,83 +1,16 @@
-# Virtual Environment
-# Ignore the venv directory
-venv/
-# All contents of venv dir
-venv/**
-# venv in any subdirectory
-**/venv/
-# venv relative to root
-/venv/
-# All files in venv
-venv/**/*
-# Other common names for virtual environments
-env/
-ENV/
-.env/
-.venv/
-*venv/
-*env/
-# Absolute paths for this exact venv
-/C:/Users/dougl/rogue_garmin_bridge/venv/
-/C:\Users\dougl\rogue_garmin_bridge\venv\
-
-# Python cache files
-__pycache__/
-*.py[cod]
-*.class
-**/__pycache__/
-**/*.pyc
-
-# Distribution / packaging
+# Build output
+bin/
 dist/
-build/
-*.egg-info/
 
-# IDE specific files
+# Local SDK installed by scripts/setup-sdk.sh
+.ciq/
+
+# Signing keys - never commit
+*.der
+*.pem
+
+# Editors / OS
+.vscode/*
+!.vscode/extensions.json
 .idea/
-.vscode/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Logs and databases
-*.log
-logs/
-logs/*.log
-*.sqlite
-*.sqlite3
-*.db-journal
-*.db-shm
-*.db-wal
-
-# OS specific files
 .DS_Store
-Thumbs.db
-
-# Generated FIT files
-*.fit
-/fit_files/
-fit_files/*.fit
-
-# Local configuration
-.env
-instance/
-
-# Other
-*.swp
-*.bak
-
-# Ignore pip-generated files
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Backup files
-*~
-# Personal Settings 
-user_profile.json
-
-# Credential encryption key files
-.credential_key
-.credential_key.salt
-
-# Garmin OAuth tokens (stored after authentication)
-src/data/garmin_tokens/

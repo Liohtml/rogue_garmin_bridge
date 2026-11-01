@@ -1,341 +1,148 @@
-# Rogue Garmin Bridge
+# Echo Bike for Garmin
 
-A comprehensive Python application that bridges Rogue fitness equipment (Echo Bike and Rower) to Garmin Connect, providing seamless workout tracking, real-time monitoring, and advanced data management capabilities.
+[![Build](https://github.com/Liohtml/rogue_garmin_bridge/actions/workflows/build.yml/badge.svg)](https://github.com/Liohtml/rogue_garmin_bridge/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Overview
+A Garmin **Connect IQ watch app** that connects your **fēnix** or **epix** directly to
+the **Rogue Echo Bike** (air bike) over Bluetooth LE and records a **native indoor
+cycling activity** with the bike's power, cadence, speed and distance. No phone,
+Raspberry Pi or other bridge is needed.
 
-Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment via Bluetooth Low Energy (BLE) using the Fitness Machine Service (FTMS) standard through the `pyftms` library. It collects workout metrics, processes the data in real-time, and converts it to the Garmin FIT file format for upload to Garmin Connect. The application features a modern web-based interface with comprehensive device management, workout monitoring, and data analysis tools.
+🇩🇪 [Deutsche Anleitung](README.de.md)
 
-## Key Features
+## Features
 
-### 🔗 **Advanced Device Connectivity**
-* **FTMS Bluetooth Support**: Robust BLE connectivity using `pyftms` library
-* **Device Pairing Wizard**: Step-by-step guidance for connecting equipment
-* **Auto-reconnection**: Automatic reconnection with exponential backoff
-* **Connection Quality Monitoring**: Real-time signal strength and data rate indicators
-* **Comprehensive Diagnostics**: Built-in troubleshooting and system health checks
+- Finds and connects to the Echo Bike console automatically (Bluetooth **FTMS**) and
+  reconnects after dropouts.
+- Live screens: power, cadence, heart rate, speed, distance, timer · averages, max,
+  normalized power, lap power, calories, kcal/h, MET.
+- Records a regular Garmin activity (*Indoor Cycling*). Power, cadence, speed and
+  distance go into the **native FIT fields**, so Garmin Connect, Strava, TrainingPeaks
+  and others show them like data from a power meter.
+- Every other value the console sends (calories, kcal/h, console HR, MET, resistance)
+  is stored as Connect IQ developer fields. Details: [docs/fit-fields.md](docs/fit-fields.md).
+- Laps, pause/resume, save/discard, using the same buttons as Garmin's own activities.
+- English and German UI. Speed and distance follow the watch's unit setting.
+- Should also work with other FTMS indoor bikes (falls back to the first FTMS device it finds).
 
-### 📊 **Real-time Workout Monitoring**
-* **Live Metrics Display**: Power, heart rate, cadence/stroke rate, speed, distance, and calories
-* **Interactive Charts**: Real-time data visualization with responsive design
-* **Workout Phase Tracking**: Automatic detection of warm-up, main workout, and cool-down phases
-* **Performance Indicators**: Power zones, training load, and intensity metrics
-* **Data Decimation**: Optimized chart rendering for smooth performance
+## Install
 
-### 📈 **Advanced Workout History & Analytics**
-* **Comprehensive History**: Detailed workout records with filtering and search
-* **Performance Analysis**: Charts, trends, and statistical analysis
-* **Workout Comparison**: Side-by-side comparison of multiple sessions
-* **Export Capabilities**: Multiple format support (JSON, CSV, FIT)
-* **Data Visualization**: Interactive charts with zoom, pan, and metric selection
+### Connect IQ store
 
-### ⚙️ **Enhanced Settings & Configuration**
-* **User Profile Management**: Complete profile with unit preferences and biometric data
-* **Workout Preferences**: Customizable auto-start, data recording intervals, and power smoothing
-* **System Configuration**: Connection timeouts, logging levels, and device type preferences
-* **Backup & Restore**: Complete data backup and restore functionality
-* **Data Management**: Storage monitoring, cleanup tools, and export options
+Not published yet. See [docs/publishing.md](docs/publishing.md).
 
-### 🔧 **Development & Testing Tools**
-* **FTMS Device Simulator**: Realistic simulation for testing without physical hardware
-* **Comprehensive Test Suite**: Unit, integration, and end-to-end testing
-* **FIT File Analysis**: Tools for validating and analyzing generated FIT files
-* **Performance Monitoring**: Built-in performance metrics and optimization
+### Sideload (USB)
 
-## System Requirements
+1. Download the `.prg` for your watch from the
+   [latest release](https://github.com/Liohtml/rogue_garmin_bridge/releases/latest)
+   (table below).
+2. Connect the watch via USB. On macOS use [OpenMTP](https://openmtp.ganeshrvel.com/).
+3. Copy the file to **`GARMIN/APPS/`**. You can rename it, e.g. to `EchoBike.prg`.
+4. Unplug. **Echo Bike** now appears in the list of activities / apps.
 
-* Python 3.12+ (due to `pyftms` dependency)
-* Bluetooth adapter with BLE support
-* Operating System: Windows, macOS, or Linux (Raspberry Pi compatible)
-* Web browser for accessing the user interface
+Sideloaded apps do not update automatically.
 
-## Prerequisites
+## Supported watches
 
-* Python 3.12 or higher
-* pip (Python package installer)
-* Git (optional, for cloning the repository)
+| Watch | File |
+|---|---|
+| epix™ (Gen 2) / quatix® 7 Sapphire | `EchoBike-epix2.prg` |
+| epix™ Pro (Gen 2) 42mm | `EchoBike-epix2pro42mm.prg` |
+| epix™ Pro (Gen 2) 47mm / quatix® 7 Pro | `EchoBike-epix2pro47mm.prg` |
+| epix™ Pro (Gen 2) 51mm / D2™ Mach 1 Pro / tactix® 7 – AMOLED Edition | `EchoBike-epix2pro51mm.prg` |
+| fēnix® 5 Plus | `EchoBike-fenix5plus.prg` |
+| fēnix® 5S Plus | `EchoBike-fenix5splus.prg` |
+| fēnix® 5X Plus | `EchoBike-fenix5xplus.prg` |
+| fēnix® 6 / 6 Solar / 6 Dual Power | `EchoBike-fenix6.prg` |
+| fēnix® 6 Pro / 6 Sapphire / 6 Pro Solar / 6 Pro Dual Power / quatix® 6 | `EchoBike-fenix6pro.prg` |
+| fēnix® 6S / 6S Solar / 6S Dual Power | `EchoBike-fenix6s.prg` |
+| fēnix® 6S Pro / 6S Sapphire / 6S Pro Solar / 6S Pro Dual Power | `EchoBike-fenix6spro.prg` |
+| fēnix® 6X Pro / 6X Sapphire / 6X Pro Solar / tactix® Delta Sapphire / Delta Solar / Delta Solar - Ballistics Edition / quatix® 6X / 6X Solar / 6X Dual Power | `EchoBike-fenix6xpro.prg` |
+| fēnix® 7 / quatix® 7 | `EchoBike-fenix7.prg` |
+| fēnix® 7 Pro | `EchoBike-fenix7pro.prg` |
+| fēnix® 7 Pro - Solar Edition (no Wi-Fi) | `EchoBike-fenix7pronowifi.prg` |
+| fēnix® 7S | `EchoBike-fenix7s.prg` |
+| fēnix® 7S Pro | `EchoBike-fenix7spro.prg` |
+| fēnix® 7X / tactix® 7 / quatix® 7X Solar / Enduro™ 2 | `EchoBike-fenix7x.prg` |
+| fēnix® 7X Pro | `EchoBike-fenix7xpro.prg` |
+| fēnix® 7X Pro - Solar Edition (no Wi-Fi) | `EchoBike-fenix7xpronowifi.prg` |
+| fēnix® 8 43mm | `EchoBike-fenix843mm.prg` |
+| fēnix® 8 47mm / 51mm / tactix® 8 47mm / 51mm / quatix® 8 47mm / 51mm | `EchoBike-fenix847mm.prg` |
+| fēnix® 8 Pro 47mm / 51mm / MicroLED / quatix® 8 Pro 47mm / 51mm | `EchoBike-fenix8pro47mm.prg` |
+| fēnix® 8 Solar 47mm | `EchoBike-fenix8solar47mm.prg` |
+| fēnix® 8 Solar 51mm / tactix® 8 Solar 51mm | `EchoBike-fenix8solar51mm.prg` |
+| fēnix® 9 43mm | `EchoBike-fenix943mm.prg` |
+| fēnix® 9 47mm / 51mm | `EchoBike-fenix947mm.prg` |
+| fēnix® 9 Pro 43mm | `EchoBike-fenix9pro43mm.prg` |
+| fēnix® 9 Pro 47mm | `EchoBike-fenix9pro47mm.prg` |
+| fēnix® 9 Pro 51mm | `EchoBike-fenix9pro51mm.prg` |
+| fēnix® 9 Pro Solar 47mm | `EchoBike-fenix9prosolar47mm.prg` |
+| fēnix® 9 Pro Solar 51mm | `EchoBike-fenix9prosolar51mm.prg` |
+| fēnix® E | `EchoBike-fenixe.prg` |
 
-## Installation
-
-1. Clone the repository (or download and extract the ZIP file):
-    ```
-    git clone https://github.com/Douglas-Christian/rogue_garmin_bridge.git
-    cd rogue_garmin_bridge
-    ```
-
-2. Create and activate a virtual environment (optional but recommended):
-    ```
-    python3.12 -m venv venv
-    # On Windows:
-    venv\Scripts\activate
-    # On macOS/Linux:
-    source venv/bin/activate
-    ```
-
-3. Install the required dependencies:
-    ```
-    pip install -r requirements.txt
-    ```
+Not supported: the original epix (2015) and fēnix 3/5 (non-Plus). Their apps cannot
+use Bluetooth LE.
 
 ## Usage
 
-1. Navigate to the project directory:
-    ```
-    cd rogue_garmin_bridge
-    ```
+| Button | Action |
+|---|---|
+| **START/STOP** | start · pause → menu *Resume / Save / Discard* |
+| **BACK/LAP** | lap while recording · menu while paused · exit before start |
+| **UP / DOWN**, swipe, tap | switch data page |
 
-2. Start the web application:
-    ```
-    python3.12 src/web/app.py
-    ```
+Pedal the bike so the console wakes up, then open the app. The status line shows
+*Searching → Connecting → device name*. The console must **not** be connected to
+Zwift or another app at the same time: it accepts only one Bluetooth connection.
 
-3. Open a web browser and navigate to:
-    ```
-    http://localhost:5000
-    ```
+## Build from source
 
-### Quick Start Guide
-
-#### 1. Device Connection
-* **New Users**: Use the Device Pairing Wizard for step-by-step guidance
-* **Echo Bike**: Press and hold "Connect" button for 2 seconds until you hear beeps
-* **Echo Rower**: Select "Connect" → "Connect to App" from the menu
-* Navigate to "Devices" page, click "Discover Devices", and connect to your equipment
-
-#### 2. Workout Tracking
-* Navigate to the "Workout" page
-* Click "Start Workout" to begin real-time tracking
-* Monitor live metrics: power, heart rate, cadence/stroke rate, speed, distance, calories
-* View real-time charts and performance indicators
-* Click "End Workout" when finished
-
-#### 3. Workout Analysis
-* Navigate to "History" page to view all past workouts
-* Use filters and search to find specific sessions
-* Click on any workout for detailed analysis with interactive charts
-* Compare multiple workouts side-by-side
-* Export data in various formats (JSON, CSV, FIT)
-
-#### 4. Garmin Connect Integration
-* Select a workout from the History page
-* Click "Generate FIT" to create a Garmin-compatible file
-* Download and manually upload to Garmin Connect
-* FIT files include proper training load calculation for accurate Garmin metrics
-
-#### 5. Settings & Configuration
-* Navigate to "Settings" to configure user profile and preferences
-* Set up workout preferences (auto-start, data recording intervals, power smoothing)
-* Configure system settings (connection timeouts, logging, unit preferences)
-* Use backup/restore functionality to protect your data
-
-## Recent Major Updates (2025)
-
-### 🚀 **Complete Web Interface Overhaul**
-* **Enhanced Device Management**: Advanced connection management with pairing wizard, diagnostics, and troubleshooting guides
-* **Real-time Monitoring Improvements**: Optimized data polling, client-side caching, and responsive charts with proper data decimation
-* **Advanced Workout History**: Comprehensive filtering, search, detailed analysis, and comparison capabilities
-* **Settings & Configuration Management**: Complete user profile system, workout preferences, and data management tools
-
-### 🔧 **Technical Improvements**
-* **Migration to `pyftms`**: Replaced `pycycling` with `pyftms` for more robust FTMS communication and improved rower support
-* **Python 3.12 Requirement**: Updated to Python 3.12 for latest `pyftms` compatibility
-* **Enhanced FIT File Generation**: Proper training load calculation and improved speed metrics for Garmin Connect compatibility
-* **Comprehensive Testing**: Added extensive unit, integration, and simulator-based testing
-* **Performance Optimization**: Improved data processing, memory usage, and UI responsiveness
-
-### 📊 **Data & Analytics Enhancements**
-* **Advanced Workout Analysis**: Power zones, training phases, and performance metrics
-* **Export & Backup System**: Multiple export formats with complete backup and restore functionality
-* **Storage Management**: Built-in storage monitoring and cleanup tools
-* **FIT File Analysis Tools**: Validation and comparison tools for ensuring Garmin Connect compatibility
-
-## Project Structure
-
-```
-rogue_garmin_bridge/
-├── src/                           # Source code
-│   ├── ftms/                      # FTMS connectivity and device management
-│   │   ├── ftms_manager.py        # Unified device management interface
-│   │   ├── ftms_connector.py      # Real device BLE connectivity
-│   │   └── ftms_simulator.py      # Device simulator for testing
-│   ├── data/                      # Data processing and storage
-│   │   ├── database.py            # SQLite database operations
-│   │   ├── workout_manager.py     # Workout session management
-│   │   └── data_processor.py      # Data analysis and processing
-│   ├── fit/                       # FIT file generation and analysis
-│   │   ├── fit_converter.py       # Garmin FIT format conversion
-│   │   ├── fit_analyzer.py        # FIT file analysis tools
-│   │   ├── fit_processor.py       # Advanced FIT processing
-│   │   └── speed_calculator.py    # Speed calculation utilities
-│   ├── web/                       # Web interface (Flask application)
-│   │   ├── app.py                 # Main Flask application
-│   │   ├── templates/             # HTML templates
-│   │   │   ├── devices.html       # Enhanced device management
-│   │   │   ├── workout.html       # Real-time workout monitoring
-│   │   │   ├── history.html       # Advanced workout history
-│   │   │   └── settings.html      # Comprehensive settings management
-│   │   └── static/                # Static assets
-│   │       ├── css/style.css      # Enhanced styling
-│   │       └── js/                # JavaScript modules
-│   │           ├── device-management.js    # Device connection management
-│   │           ├── workout-monitoring.js   # Real-time workout display
-│   │           └── workout-history.js      # History and analytics
-│   └── utils/                     # Utility modules
-│       └── logging_config.py      # Centralized logging configuration
-├── tests/                         # Comprehensive test suite
-│   ├── unit/                      # Unit tests
-│   ├── integration/               # Integration tests
-│   └── fixtures/                  # Test data and fixtures
-├── docs/                          # Documentation
-│   └── testing_with_simulator.md  # Simulator usage guide
-├── fit_files/                     # Generated FIT files (runtime)
-├── logs/                          # Application logs (runtime)
-└── requirements.txt               # Python dependencies
-```
-
-## Web Interface Features
-
-### Device Management
-* **Enhanced Connection Interface**: Real-time status indicators, signal strength monitoring
-* **Device Pairing Wizard**: Step-by-step guidance for new users
-* **Auto-reconnection**: Automatic reconnection with user feedback
-* **Diagnostic Tools**: Built-in system health checks and troubleshooting guides
-
-### Workout Monitoring
-* **Real-time Charts**: Interactive, responsive charts with data decimation
-* **Performance Metrics**: Power zones, training load, and intensity indicators
-* **Workout Phases**: Automatic detection of warm-up, main workout, and cool-down
-* **Connection Quality**: Live monitoring of data rate and signal strength
-
-### Workout History & Analytics
-* **Advanced Filtering**: Search and filter by date, duration, type, and metrics
-* **Detailed Analysis**: Interactive charts with zoom, pan, and metric selection
-* **Workout Comparison**: Side-by-side comparison of multiple sessions
-* **Export Options**: JSON, CSV, and FIT format exports with date range selection
-
-### Settings & Configuration
-* **User Profile**: Complete biometric data with unit preference management
-* **Workout Preferences**: Auto-start, data recording intervals, power smoothing
-* **System Settings**: Connection timeouts, logging levels, device preferences
-* **Data Management**: Backup/restore, storage monitoring, and cleanup tools
-
-## Configuration
-
-### Web Interface Configuration
-All configuration is available through the comprehensive Settings page in the web interface:
-
-* **User Profile**: Personal information, biometric data, unit preferences
-* **Workout Preferences**: Default settings, auto-start options, data recording
-* **System Configuration**: Connection settings, logging, device preferences
-* **Data Management**: Backup/restore, export options, storage cleanup
-
-### Environment Variables
-Advanced users can also configure via environment variables:
-
-* `PORT`: Web server port (default: 5000)
-* `DEBUG`: Enable debug mode (default: False)
-* `DATABASE_URL`: Database location (default: SQLite in data directory)
-* `SECRET_KEY`: Session encryption key (required for production)
-
-## Development & Testing
-
-### FTMS Device Simulator
-
-For development and testing without physical hardware:
+Requirements: Linux or macOS, Java 17+, `curl`, `unzip`, `python3`, `openssl`.
 
 ```bash
-# Start with simulator enabled
-python3.12 src/web/app.py --use-simulator --device-type bike
-python3.12 src/web/app.py --use-simulator --device-type rower
-
-# Or enable via web interface Settings page
+scripts/setup-sdk.sh            # downloads the Connect IQ SDK + device definitions (no login)
+scripts/build.sh                # all watches -> dist/EchoBike-<device>.prg + dist/EchoBike.iq
+scripts/build.sh fenix7         # one watch
+scripts/build.sh --test fenix7  # unit-test build
 ```
 
-The simulator provides realistic workout data and supports all application features. See [Testing with the FTMS Simulator](docs/testing_with_simulator.md) for detailed usage instructions.
+`setup-sdk.sh` creates the device definitions from the device list that ships inside
+the SDK compiler (`scripts/GenerateDevices.java`). Device files you already
+installed with Garmin's SDK Manager are kept. If you use the SDK Manager and VS Code
+with the Monkey C extension, open the folder and run *Monkey C: Build for Device*.
 
-### Running Tests
+By downloading the SDK you accept the
+[Garmin Connect IQ SDK License Agreement](https://developer.garmin.com/connect-iq/sdk/).
 
-```bash
-# Run all tests
-pytest
+## Project layout
 
-# Run specific test categories
-pytest tests/unit/                    # Unit tests
-pytest tests/integration/             # Integration tests
-pytest -m simulator                  # Simulator tests
-
-# Run with coverage
-pytest --cov=src --cov-report=html
-
-# Run performance tests
-pytest -m slow
-```
-
-### FIT File Analysis Tools
-
-Built-in tools for analyzing and validating FIT files:
-
-* **FIT Analyzer**: `src/fit/fit_analyzer.py` - Comprehensive FIT file analysis
-* **FIT Processor**: `src/fit/fit_processor.py` - Advanced processing and validation
-* **Speed Calculator**: `src/fit/speed_calculator.py` - Speed calculation utilities
-
-### Code Quality
-
-```bash
-# Format code
-black src/ tests/
-
-# Lint code
-flake8 src/ tests/
-
-# Type checking
-mypy src/
-```
-
-## Troubleshooting
-
-### Built-in Diagnostics
-
-The application includes comprehensive diagnostic tools accessible via the web interface:
-
-* **Device Diagnostics**: Navigate to Devices page → "Run Diagnostics" for system health checks
-* **Connection Quality Monitoring**: Real-time signal strength, data rate, and connection stability metrics
-* **Troubleshooting Guides**: Built-in guides for common connection and data issues
-
-### Common Issues
-
-* **Bluetooth Connection Problems**: 
-  - Use the Device Pairing Wizard for step-by-step guidance
-  - Check Bluetooth adapter BLE support and drivers
-  - Ensure `bluez` (Linux) or appropriate BLE drivers are installed
-  
-* **Device Not Found**: 
-  - Verify equipment is powered on and in pairing mode
-  - Use the connection quality indicators to check signal strength
-  - Try the auto-reconnection feature if connection drops
-  
-* **Data Issues**: 
-  - Check connection quality metrics in the Devices page
-  - Use the built-in FIT file analysis tools for validation
-  - Review workout data in the History page for completeness
-
-### Advanced Troubleshooting
-
-* **Log Analysis**: Check application logs in the `logs/` directory
-* **Database Issues**: Use the backup/restore functionality in Settings
-* **Performance Problems**: Monitor system resources via the diagnostic tools
-* **FIT File Validation**: Use the built-in FIT analysis tools for Garmin Connect compatibility
+| Path | Content |
+|---|---|
+| `source/FtmsBleManager.mc` | BLE scan, connect, notifications, reconnect – [docs/ftms.md](docs/ftms.md) |
+| `source/BikeData.mc` | FTMS Indoor Bike Data parser (all fields) |
+| `source/Recorder.mc` | activity session, FIT fields, averages, NP, laps – [docs/fit-fields.md](docs/fit-fields.md) |
+| `source/MainView.mc`, `source/MainDelegate.mc` | screens, buttons, pause menu |
+| `source/test/` | unit tests (`(:test)`) |
+| `resources/`, `resources-deu/` | strings (EN/DE), icon |
+| `scripts/` | SDK setup, build, device definition generator |
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Bug reports from real hardware are especially valuable: which watch, which console,
+what you see in Garmin Connect. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## License
+## History
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This repository started as a fork of
+[Douglas-Christian/rogue_garmin_bridge](https://github.com/Douglas-Christian/rogue_garmin_bridge),
+a Python/Raspberry Pi bridge that turns Echo Bike data into FIT files. That code has no
+license and was removed here. This project is a separate, MIT-licensed rewrite that runs
+directly on the watch. The original bridge is still available upstream.
 
-## Acknowledgments
+## License & trademarks
 
-* Rogue Fitness for their FTMS-compatible equipment
-* The Garmin Connect team for their fitness platform
-* All contributors to the Python libraries used in this project, especially the `pyftms` and `bleak` libraries.
+[MIT](LICENSE) © 2026 Liohtml.
+
+Not affiliated with, endorsed or sponsored by Rogue Fitness or Garmin. *Rogue* and
+*Echo Bike* are trademarks of Rogue Fitness; *Garmin*, *fēnix*, *epix* and *Connect IQ*
+are trademarks of Garmin Ltd. or its subsidiaries.

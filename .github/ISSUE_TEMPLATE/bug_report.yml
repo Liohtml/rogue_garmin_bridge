@@ -1,0 +1,46 @@
+name: Bug report
+description: Something does not work on your watch or with your bike
+labels: [bug]
+body:
+  - type: input
+    id: watch
+    attributes:
+      label: Watch model and firmware
+      description: Settings > System > About
+      placeholder: "fenix 7 Pro, software 21.19"
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: App version
+      placeholder: "1.0.0 (store / sideloaded)"
+    validations:
+      required: true
+  - type: input
+    id: bike
+    attributes:
+      label: Bike / console
+      placeholder: "Rogue Echo Bike, console with Bluetooth (bought 2024)"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Steps to reproduce, what you expected and what you saw instead.
+    validations:
+      required: true
+  - type: textarea
+    id: status
+    attributes:
+      label: Status line / diagnostics
+      description: |
+        Text shown at the top of the screen (e.g. "Searching Echo Bike...", device name).
+        If you can, attach the FIT file of the activity and the crash log
+        `GARMIN/APPS/LOGS/CIQ_LOG.YML`. Sideloaded apps also write a debug log when an empty
+        text file with the same name as the .prg exists, e.g. `GARMIN/APPS/EchoBike.prg`
+        -> `GARMIN/APPS/LOGS/EchoBike.TXT`.
+  - type: textarea
+    id: connect
+    attributes:
+      label: Garmin Connect / Strava
+      description: For data problems - which values are missing or wrong after upload?
